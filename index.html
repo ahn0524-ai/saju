@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0065)file:///Users/ahnjoohyun_macbook/Downloads/saju_prototype_v8.html -->
+<!-- 사주 앱 v10.1 - GitHub Pages 배포용 - 2026-05-22 -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -10264,6 +10264,7 @@ async function fetchReadingFromAPI(category) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        mode: 'reading',  // v10.1: 풀이 모드 명시
         sajuData: state.result,
         category: category,
         ziPingZhenQuanData: null
@@ -10281,7 +10282,7 @@ async function fetchReadingFromAPI(category) {
     state.apiReadings[category] = data.reading;
     return data.reading;
   } catch (error) {
-    console.error('[v9 API 오류]', category, error);
+    console.error('[v10 API 오류]', category, error);
     // 에러는 캐시하지 않음 — 재시도 시 다시 호출
     throw error;
   }
@@ -10708,10 +10709,14 @@ function renderPremium() {
   }
   $('premium-cards').innerHTML = h;
 
-  // v10: 5개 카테고리를 병렬로 동시 호출
-  // Promise.all 안 쓰는 이유: 하나가 실패해도 나머지는 계속 표시되도록
+  // v10.1: 5개 카테고리를 600ms 간격으로 stagger 호출
+  // 동시에 5개 쏘면 Cloudflare Worker 무료 플랜 동시 처리 한도(30초 타임아웃)에 걸림
+  // 600ms 간격이면 첫 호출이 5초 안에 끝났을 때 다음 호출이 자연스럽게 이어짐
+  // 5개 모두 끝나는 데 약 7~10초 (사용자 체감 OK, 안정성 확보)
   for (var i = 0; i < PREMIUM.length; i++) {
-    loadReadingIntoCard(PREMIUM[i].id);
+    (function(idx, id) {
+      setTimeout(function() { loadReadingIntoCard(id); }, idx * 600);
+    })(i, PREMIUM[i].id);
   }
 }
 
