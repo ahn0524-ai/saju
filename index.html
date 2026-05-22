@@ -610,54 +610,7 @@ input { font-family:inherit; -webkit-appearance:none; appearance:none; border-ra
   margin-bottom:14px;
   overflow:hidden;
 }
-.premium-card.locked .premium-body {
-  filter:blur(6px);
-  pointer-events:none;
-  user-select:none;
-}
-.premium-overlay {
-  position:absolute;
-  inset:0;
-  display:flex; flex-direction:column;
-  justify-content:center; align-items:center;
-  gap:14px;
-  background:linear-gradient(180deg,
-    rgba(10,8,7,0.5) 0%,
-    rgba(10,8,7,0.85) 60%);
-  padding:24px;
-  text-align:center;
-  z-index:5;
-}
-.premium-card.unlocked .premium-overlay { display:none; }
 .premium-card.unlocked .premium-body { filter:none; }
-.lock-icon {
-  font-size:28px;
-  color:var(--skin-d);
-}
-.lock-title {
-  font-size:16px;
-  color:var(--paper);
-}
-.lock-price {
-  font-size:26px;
-  color:var(--skin);
-}
-.lock-btn {
-  background:var(--skin);
-  color:var(--ink);
-  padding:14px 32px;
-  font-size:13px;
-  font-weight:500;
-  letter-spacing:0.15em;
-  min-height:50px;
-  min-width:140px;
-}
-.lock-btn:active { background:var(--skin-d); }
-.lock-note {
-  font-size:10px;
-  color:var(--paper-dd);
-  letter-spacing:0.1em;
-}
 .premium-card-header {
   display:flex;
   align-items:center;
@@ -705,26 +658,8 @@ input { font-family:inherit; -webkit-appearance:none; appearance:none; border-ra
 .premium-content .key-finding strong { color:var(--skin); }
 
 /* ============================================================
-   v9: API 호출 UI (로딩 / 에러 / 잠금 placeholder)
+   v9: API 호출 UI (로딩 / 에러)
    ============================================================ */
-.premium-locked-placeholder {
-  padding:28px 16px;
-  text-align:center;
-  opacity:0.6;
-}
-.premium-locked-han {
-  font-size:22px;
-  letter-spacing:6px;
-  color:var(--gold);
-  margin-bottom:14px;
-  font-family:var(--font-han);
-}
-.premium-locked-msg {
-  font-size:11px;
-  color:var(--paper-d);
-  line-height:1.7;
-  letter-spacing:0.3px;
-}
 .api-loading {
   padding:32px 16px;
   text-align:center;
@@ -793,6 +728,322 @@ input { font-family:inherit; -webkit-appearance:none; appearance:none; border-ra
   background:var(--skin);
   color:var(--ink);
 }
+
+/* ============================================================
+   v10: AI 대화 섹션 (Premium 5개 풀이 아래)
+   ============================================================ */
+.chat-section {
+  margin-top:40px;
+  padding-top:32px;
+  border-top:1px solid rgba(232,182,160,0.15);
+}
+.chat-header {
+  margin-bottom:24px;
+}
+.chat-section-num {
+  font-size:11px;
+  letter-spacing:3px;
+  color:var(--gold);
+  margin-bottom:8px;
+  text-transform:uppercase;
+}
+
+/* --- Paywall (결제 전) --- */
+.chat-paywall {
+  background:linear-gradient(180deg, rgba(232,182,160,0.04) 0%, rgba(0,0,0,0) 100%);
+  border:1px solid rgba(232,182,160,0.15);
+  border-radius:8px;
+  padding:32px 20px;
+  text-align:center;
+}
+.chat-paywall-icon {
+  font-size:32px;
+  margin-bottom:14px;
+}
+.chat-paywall-title {
+  font-size:16px;
+  color:var(--paper);
+  margin-bottom:10px;
+  letter-spacing:0.5px;
+}
+.chat-paywall-desc {
+  font-size:12px;
+  color:var(--paper-d);
+  line-height:1.7;
+  margin-bottom:24px;
+}
+.chat-paywall-price-box {
+  background:rgba(0,0,0,0.3);
+  border:1px solid rgba(232,182,160,0.2);
+  border-radius:6px;
+  padding:16px;
+  margin-bottom:24px;
+}
+.chat-paywall-price-row {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:13px;
+  color:var(--paper);
+  margin-bottom:6px;
+}
+.chat-paywall-price-row strong {
+  font-size:18px;
+  color:var(--skin);
+  font-weight:500;
+}
+.chat-paywall-price-note {
+  font-size:10px;
+  color:var(--paper-d);
+  opacity:0.7;
+  text-align:center;
+  letter-spacing:0.3px;
+}
+.chat-paywall-card-section {
+  margin-top:8px;
+}
+.chat-paywall-card-label {
+  font-size:11px;
+  color:var(--paper-d);
+  margin-bottom:12px;
+  letter-spacing:1px;
+}
+.chat-paywall-card {
+  cursor:pointer;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform 0.2s, filter 0.2s;
+}
+.chat-paywall-card:hover {
+  transform:translateY(-2px);
+}
+.chat-paywall-card:active,
+.chat-paywall-card.pressed {
+  transform:scale(0.96);
+  filter:brightness(1.15);
+}
+
+/* 가짜 신용카드 */
+.fake-card {
+  width:280px;
+  height:170px;
+  margin:0 auto;
+  background:linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+  border:1px solid rgba(232,182,160,0.3);
+  border-radius:12px;
+  padding:20px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05) inset;
+  position:relative;
+  overflow:hidden;
+}
+.fake-card::before {
+  content:'';
+  position:absolute;
+  top:-50%;
+  right:-50%;
+  width:200%;
+  height:200%;
+  background:radial-gradient(circle, rgba(232,182,160,0.08) 0%, transparent 60%);
+  pointer-events:none;
+}
+.fake-card-brand {
+  font-size:14px;
+  letter-spacing:3px;
+  color:var(--skin);
+  font-weight:500;
+  margin-bottom:36px;
+  position:relative;
+  z-index:1;
+}
+.fake-card-number {
+  font-size:18px;
+  letter-spacing:3px;
+  color:var(--paper);
+  font-family:'Courier New', monospace;
+  margin-bottom:24px;
+  position:relative;
+  z-index:1;
+}
+.fake-card-bottom {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:relative;
+  z-index:1;
+}
+.fake-card-name {
+  font-size:10px;
+  letter-spacing:1.5px;
+  color:var(--paper-d);
+  text-transform:uppercase;
+}
+.fake-card-cvc {
+  font-size:11px;
+  color:var(--paper-d);
+  font-family:'Courier New', monospace;
+}
+.chat-paywall-sim-note {
+  margin-top:16px;
+  font-size:10px;
+  color:var(--paper-d);
+  opacity:0.6;
+  letter-spacing:0.3px;
+}
+
+/* --- Chat Interface (결제 후) --- */
+.chat-interface {
+  background:rgba(0,0,0,0.2);
+  border:1px solid rgba(232,182,160,0.12);
+  border-radius:8px;
+  overflow:hidden;
+}
+.chat-usage-bar {
+  padding:10px 14px;
+  background:rgba(232,182,160,0.06);
+  border-bottom:1px solid rgba(232,182,160,0.1);
+  font-size:11px;
+  color:var(--paper);
+  letter-spacing:0.3px;
+  text-align:center;
+}
+.chat-usage-bar strong {
+  color:var(--skin);
+  font-weight:500;
+}
+.chat-usage-rate {
+  margin-left:8px;
+  font-size:10px;
+  color:var(--paper-d);
+  opacity:0.7;
+}
+.chat-messages {
+  padding:16px;
+  max-height:480px;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.chat-msg {
+  margin-bottom:14px;
+  font-size:13px;
+  line-height:1.7;
+  word-break:keep-all;
+}
+.chat-msg p {
+  margin:0 0 6px 0;
+}
+.chat-msg p:last-child {
+  margin-bottom:0;
+}
+.chat-msg-user {
+  background:rgba(232,182,160,0.1);
+  border-left:2px solid var(--skin);
+  padding:10px 14px;
+  border-radius:4px;
+  color:var(--paper);
+  margin-left:20px;
+}
+.chat-msg-assistant {
+  padding:6px 0;
+  color:var(--paper);
+}
+.chat-msg-assistant h4 {
+  font-size:13px;
+  color:var(--gold);
+  margin:12px 0 6px;
+  letter-spacing:0.3px;
+}
+.chat-msg-assistant ul {
+  margin:6px 0 6px 12px;
+  padding-left:8px;
+}
+.chat-msg-assistant li {
+  margin-bottom:4px;
+}
+.chat-msg-assistant strong {
+  color:var(--skin);
+  font-weight:500;
+}
+.chat-msg-loading {
+  padding:8px 0;
+  text-align:center;
+}
+.chat-msg-error {
+  background:rgba(220,80,80,0.08);
+  border-left:2px solid rgba(220,80,80,0.5);
+  padding:8px 12px;
+  border-radius:4px;
+  color:var(--paper-d);
+  font-size:12px;
+}
+.chat-input-wrap {
+  display:flex;
+  align-items:stretch;
+  gap:8px;
+  padding:12px;
+  border-top:1px solid rgba(232,182,160,0.1);
+  background:rgba(0,0,0,0.3);
+}
+.chat-input {
+  flex:1;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(232,182,160,0.2);
+  border-radius:6px;
+  padding:10px 12px;
+  color:var(--paper);
+  font-size:13px;
+  font-family:inherit;
+  resize:none;
+  line-height:1.5;
+  min-height:42px;
+  max-height:120px;
+}
+.chat-input:focus {
+  outline:none;
+  border-color:var(--skin);
+}
+.chat-input::placeholder {
+  color:var(--paper-d);
+  opacity:0.5;
+}
+.chat-input:disabled {
+  opacity:0.4;
+  cursor:not-allowed;
+}
+.chat-send-btn {
+  background:var(--skin);
+  color:var(--ink);
+  border:none;
+  border-radius:6px;
+  padding:0 18px;
+  font-size:13px;
+  font-weight:500;
+  letter-spacing:1px;
+  cursor:pointer;
+  font-family:inherit;
+  transition:all 0.15s;
+  min-width:64px;
+}
+.chat-send-btn:hover:not(:disabled) {
+  background:#f0c4a8;
+}
+.chat-send-btn:active:not(:disabled) {
+  transform:scale(0.96);
+}
+.chat-send-btn:disabled {
+  background:rgba(232,182,160,0.25);
+  color:rgba(0,0,0,0.4);
+  cursor:not-allowed;
+}
+.chat-disclaimer {
+  padding:8px 12px;
+  font-size:10px;
+  color:var(--paper-d);
+  opacity:0.5;
+  text-align:center;
+  letter-spacing:0.3px;
+  background:rgba(0,0,0,0.3);
+  border-top:1px solid rgba(232,182,160,0.05);
+}
 .not-in-db {
   padding:24px 16px;
   text-align:center;
@@ -811,77 +1062,6 @@ input { font-family:inherit; -webkit-appearance:none; appearance:none; border-ra
   color:var(--paper-d);
   line-height:1.7;
 }
-
-/* === 결제 모달 === */
-.pay-overlay {
-  position:fixed;
-  inset:0;
-  z-index:1000;
-  background:rgba(10,8,7,0.96);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  padding:24px;
-}
-.pay-overlay.show { display:flex; }
-.pay-modal {
-  max-width:380px;
-  width:100%;
-  background:#1a0e0a;
-  border:1px solid rgba(232,182,160,0.3);
-  padding:32px 24px;
-  text-align:center;
-}
-.pay-mark { font-size:28px; color:var(--skin); margin-bottom:6px; }
-.pay-title { font-size:13px; color:var(--paper-d); }
-.pay-item { font-size:18px; margin:18px 0 6px; }
-.pay-price { font-size:32px; color:var(--skin); margin-bottom:24px; }
-.pay-methods { display:grid; gap:8px; margin-bottom:14px; }
-.pay-btn {
-  padding:14px;
-  background:rgba(232,182,160,0.08);
-  border:1px solid rgba(232,182,160,0.3);
-  color:var(--paper);
-  font-size:14px;
-  letter-spacing:0.1em;
-  min-height:48px;
-}
-.pay-btn.primary {
-  background:var(--skin);
-  color:var(--ink);
-  border:none;
-  font-weight:500;
-}
-.pay-btn:active { opacity:0.7; }
-.pay-cancel {
-  font-size:13px;
-  color:var(--paper-d);
-  padding:10px;
-  margin-top:4px;
-}
-.pay-note {
-  font-size:10px;
-  color:var(--ember);
-  margin-top:18px;
-  padding-top:14px;
-  border-top:1px solid rgba(168,40,40,0.2);
-}
-.pay-processing {
-  display:none;
-  flex-direction:column;
-  align-items:center;
-  gap:16px;
-  padding:24px;
-}
-.pay-processing.show { display:flex; }
-.pay-spinner {
-  width:36px; height:36px;
-  border:2px solid rgba(232,182,160,0.2);
-  border-top-color:var(--skin);
-  border-radius:50%;
-  animation:spin 1s linear infinite;
-}
-@keyframes spin { to { transform:rotate(360deg); } }
 
 /* === 진행 도트 (하단) === */
 .dots {
@@ -1111,35 +1291,67 @@ input { font-family:inherit; -webkit-appearance:none; appearance:none; border-ra
     <div class="content">
       <div class="section-num">다섯 번째</div>
       <h2 class="section-title">더 깊은 풀이<span class="han">深解</span></h2>
-      <p class="section-sub">알고 싶은 영역을 잠금 해제</p>
+      <p class="section-sub">당신의 사주가 알려주는 다섯 가지 영역</p>
       <div id="premium-cards"></div>
+
+      <!-- v10: AI 대화 영역 -->
+      <div class="chat-section">
+        <div class="chat-header">
+          <div class="chat-section-num">여섯 번째</div>
+          <h2 class="section-title">직접 물어보기<span class="han">問 答</span></h2>
+          <p class="section-sub">위 풀이를 토대로, 당신의 사주에 대해 무엇이든 물어보세요</p>
+        </div>
+
+        <!-- 결제 전: paywall 표시 -->
+        <div id="chat-paywall" class="chat-paywall">
+          <div class="chat-paywall-icon">🔒</div>
+          <div class="chat-paywall-title">AI 사주 상담 시작하기</div>
+          <div class="chat-paywall-desc">
+            위에서 본 다섯 가지 풀이를 토대로,<br>
+            궁금한 점을 자유롭게 질문할 수 있어요
+          </div>
+          <div class="chat-paywall-price-box">
+            <div class="chat-paywall-price-row">
+              <span>질문 1회</span>
+              <strong>₩300</strong>
+            </div>
+            <div class="chat-paywall-price-note">사용한 만큼만 결제 · 횟수당 과금</div>
+          </div>
+
+          <div class="chat-paywall-card-section">
+            <div class="chat-paywall-card-label">아래 카드를 눌러 시작하기</div>
+            <div class="chat-paywall-card" id="chat-paywall-card">
+              <div class="fake-card">
+                <div class="fake-card-brand">SAJU PAY</div>
+                <div class="fake-card-number">•••• •••• •••• 8888</div>
+                <div class="fake-card-bottom">
+                  <div class="fake-card-name">A. JOOHYUN</div>
+                  <div class="fake-card-cvc">12/29</div>
+                </div>
+              </div>
+            </div>
+            <div class="chat-paywall-sim-note">⚠ 테스트 모드 · 실제 결제 발생하지 않음</div>
+          </div>
+        </div>
+
+        <!-- 결제 후: 채팅 인터페이스 -->
+        <div id="chat-interface" class="chat-interface" style="display:none;">
+          <div class="chat-usage-bar">
+            <div id="chat-usage">질문 <strong>0회</strong> · 누적 <strong>₩0</strong><span class="chat-usage-rate">(1회 ₩300)</span></div>
+          </div>
+          <div id="chat-messages" class="chat-messages"></div>
+          <div class="chat-input-wrap">
+            <textarea id="chat-input" class="chat-input" placeholder="궁금한 점을 자유롭게 물어보세요..." rows="2"></textarea>
+            <button id="chat-send" class="chat-send-btn">질문</button>
+          </div>
+          <div class="chat-disclaimer">⚠ 테스트 모드 · 실제 결제 발생하지 않음</div>
+        </div>
+      </div>
+
       <button class="btn-secondary" id="btn-restart">처음으로</button>
     </div>
   </div>
 
-</div>
-
-<!-- 결제 시뮬레이션 -->
-<div class="pay-overlay" id="pay-overlay">
-  <div class="pay-modal">
-    <div id="pay-form">
-      <div class="pay-mark">命</div>
-      <div class="pay-title">결제 (시뮬레이션)</div>
-      <div class="pay-item" id="pay-item">—</div>
-      <div class="pay-price" id="pay-price">—</div>
-      <div class="pay-methods">
-        <button class="pay-btn primary" data-pay="">간편결제</button>
-        <button class="pay-btn" data-pay="">카드결제</button>
-        <button class="pay-btn" data-pay="">계좌이체</button>
-      </div>
-      <button class="pay-cancel" id="pay-cancel">취소</button>
-      <div class="pay-note">⚠ 실제 결제 X · 검증용</div>
-    </div>
-    <div class="pay-processing" id="pay-processing">
-      <div class="pay-spinner"></div>
-      <div style="font-size:13px;">결제 중…</div>
-    </div>
-  </div>
 </div>
 
 <!-- 하단 도트 -->
@@ -10098,9 +10310,139 @@ async function loadReadingIntoCard(category) {
   }
 }
 
+// ============================================================
+// v10: AI 대화 시스템 (질문 1회 = 300원)
+// ============================================================
+var CHAT_PRICE_PER_QUESTION = 300;
+
+// 채팅 메시지 추가 (DOM에 직접 삽입)
+function appendChatMessage(role, htmlContent) {
+  var list = $('chat-messages');
+  if (!list) return;
+  var div = document.createElement('div');
+  div.className = 'chat-msg chat-msg-' + role;  // role: user | assistant | loading | error
+  div.innerHTML = htmlContent;
+  list.appendChild(div);
+  // 자동 스크롤 — 마지막 메시지로
+  div.scrollIntoView({behavior:'smooth', block:'end'});
+  return div;
+}
+
+// 사용 횟수 + 누적 금액 UI 업데이트
+function updateChatUsage() {
+  var count = state.chatAskCount || 0;
+  var total = count * CHAT_PRICE_PER_QUESTION;
+  var el = $('chat-usage');
+  if (el) {
+    el.innerHTML = '질문 <strong>' + count + '회</strong> · 누적 <strong>₩' + total.toLocaleString() + '</strong>' +
+                   '<span class="chat-usage-rate">(1회 ₩' + CHAT_PRICE_PER_QUESTION + ')</span>';
+  }
+}
+
+// 채팅 입력창 활성/비활성 상태 토글
+function setChatInputEnabled(enabled) {
+  var input = $('chat-input');
+  var btn = $('chat-send');
+  if (input) input.disabled = !enabled;
+  if (btn) btn.disabled = !enabled;
+  if (btn) btn.textContent = enabled ? '질문' : '...';
+}
+
+// 결제(이미지 클릭) 후 채팅 활성화
+function unlockChat() {
+  state.chatPaid = true;
+  $('chat-paywall').style.display = 'none';
+  $('chat-interface').style.display = 'block';
+  setChatInputEnabled(true);
+  // 초기 환영 메시지
+  if ((state.chatHistory || []).length === 0) {
+    appendChatMessage('assistant',
+      '<p>안녕하세요. 위 다섯 가지 영역의 풀이를 보셨을 텐데, 더 구체적으로 궁금한 점이 있으시면 무엇이든 물어보세요.</p>' +
+      '<p style="margin-top:8px;font-size:11px;opacity:0.7;">예시: "지금 직장을 옮기는 게 좋을까요?", "올해 안에 결혼할 가능성이 있나요?", "어떤 사람과 잘 맞나요?"</p>'
+    );
+  }
+}
+
+// Worker 채팅 엔드포인트 호출
+async function sendChatMessage(userText) {
+  if (!userText || !userText.trim()) return;
+  if (!state.chatPaid) return;
+
+  // 사용자 메시지 화면에 표시
+  appendChatMessage('user', '<p>' + escapeHTML(userText) + '</p>');
+
+  // 히스토리에 추가 (최근 10턴 유지 — 사용자+어시스턴트 페어 10개 = 20개 메시지)
+  if (!state.chatHistory) state.chatHistory = [];
+  state.chatHistory.push({role:'user', content:userText});
+
+  // 로딩 메시지
+  var loadingEl = appendChatMessage('loading',
+    '<div class="api-spinner" style="width:20px;height:20px;margin:4px auto;"></div>'
+  );
+
+  setChatInputEnabled(false);
+  $('chat-input').value = '';
+
+  try {
+    // 최근 10턴(20개 메시지)만 전송 — 비용 통제
+    var recentHistory = state.chatHistory.slice(-20);
+
+    var response = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        mode: 'chat',  // v10: 채팅 모드 구분
+        sajuData: state.result,
+        readings: state.apiReadings,  // 5개 풀이 결과를 컨텍스트로 전달
+        history: recentHistory
+      })
+    });
+
+    if (!response.ok) throw new Error('서버 응답 오류 (HTTP ' + response.status + ')');
+    var data = await response.json();
+    if (data.error) throw new Error(data.error);
+    if (!data.reply) throw new Error('응답이 비어있어요');
+
+    // 로딩 제거, 어시스턴트 답변 추가
+    loadingEl.remove();
+    appendChatMessage('assistant', data.reply);
+
+    // 히스토리에 답변 추가
+    state.chatHistory.push({role:'assistant', content:data.reply});
+
+    // 사용 횟수 증가 + UI 업데이트
+    state.chatAskCount = (state.chatAskCount || 0) + 1;
+    updateChatUsage();
+
+  } catch (error) {
+    console.error('[v10 채팅 오류]', error);
+    loadingEl.remove();
+    appendChatMessage('error',
+      '<p>⚠️ 답변을 불러오지 못했어요</p>' +
+      '<p style="font-size:11px;opacity:0.7;">' + escapeHTML(error.message) + '</p>'
+    );
+  } finally {
+    setChatInputEnabled(true);
+    $('chat-input').focus();
+  }
+}
+
+// HTML 이스케이프 (사용자 입력 XSS 방어)
+function escapeHTML(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 
 var state = {
-  apiReadings: {},  // v9: 카테고리별 API 응답 캐시 (예: { love: '<h4>...</h4>' })
+  apiReadings: {},      // v9: 5개 카테고리 풀이 캐시
+  chatHistory: [],      // v10: 채팅 히스토리 (role/content 페어)
+  chatAskCount: 0,      // v10: 누적 질문 횟수
+  chatPaid: false,      // v10: 결제 완료 여부 (이미지 클릭 후 true)
   input: {name:'', year:null, month:null, day:null,
           hour:null, minute:null,
           calendar:'solar', timeUnknown:false, gender:'male'},
@@ -10191,6 +10533,9 @@ function runCalc() {
   try {
     state.result = calcSaju(state.input);
     state.apiReadings = {};  // v9: 새 사주 계산 시 API 캐시 초기화
+    state.chatHistory = [];   // v10: 채팅 히스토리 초기화
+    state.chatAskCount = 0;   // v10: 질문 횟수 초기화
+    state.chatPaid = false;   // v10: 결제 상태 초기화
     renderAll();
     goto('s-pillars');
   } catch (e) {
@@ -10340,81 +10685,34 @@ function renderYongsin() {
 }
 
 var PREMIUM = [
-  {id:'love', title:'연애·결혼 운', han:'姻 緣', price:9900, num:'5-1'},
-  {id:'career', title:'진로·직업·이직', han:'職 業', price:9900, num:'5-2'},
-  {id:'money', title:'재물·돈 운', han:'財 運', price:7900, num:'5-3'},
-  {id:'relations', title:'인간관계 운', han:'人 緣', price:4900, num:'5-4'},
-  {id:'health', title:'건강 운', han:'健 康', price:4900, num:'5-5'}
+  {id:'love', title:'연애·결혼 운', han:'姻 緣', num:'5-1'},
+  {id:'career', title:'진로·직업·이직', han:'職 業', num:'5-2'},
+  {id:'money', title:'재물·돈 운', han:'財 運', num:'5-3'},
+  {id:'relations', title:'인간관계 운', han:'人 緣', num:'5-4'},
+  {id:'health', title:'건강 운', han:'健 康', num:'5-5'}
 ];
 
+// v10: 5개 영역 모두 잠금 없이 표시, 진입 시 자동 동시 호출
 function renderPremium() {
   var h = '';
   for (var k = 0; k < PREMIUM.length; k++) {
     var p = PREMIUM[k];
-    // v9: 풀이는 잠금 해제 후 Worker API로 가져옴. 잠금 상태에서는 placeholder만 표시.
-    var placeholder = '<div class="premium-locked-placeholder">' +
-                      '<div class="premium-locked-han">🔒 ' + p.han + '</div>' +
-                      '<div class="premium-locked-msg">잠금을 해제하면 당신의 사주에 맞춘 풀이를 받아볼 수 있어요</div>' +
-                      '</div>';
-    h += '<div class="premium-card locked" id="card-' + p.id + '">' +
-         '<div class="premium-overlay">' +
-         '<div class="lock-icon">🔒</div>' +
-         '<div class="lock-title">' + p.title + '</div>' +
-         '<div class="lock-price">₩' + p.price.toLocaleString() + '</div>' +
-         '<div class="lock-note">SIMULATION · 실제 결제 X</div>' +
-         '<button class="lock-btn" data-unlock="' + p.id + '" data-title="' + p.title + '" data-price="' + p.price + '">잠금 해제</button>' +
-         '</div>' +
+    h += '<div class="premium-card unlocked" id="card-' + p.id + '">' +
          '<div class="premium-body">' +
          '<div class="premium-card-header">' +
          '<div class="premium-card-num">' + p.num + '</div>' +
          '<div class="premium-card-title">' + p.title + '</div>' +
          '<div class="premium-card-han">' + p.han + '</div></div>' +
-         '<div class="premium-content">' + placeholder +
+         '<div class="premium-content">' + renderLoadingHTML(p.id) +
          '</div></div></div>';
   }
   $('premium-cards').innerHTML = h;
-  // 잠금 해제 버튼에 이벤트 부착 (DOM 생성 직후)
-  var btns = $$('[data-unlock]');
-  for (var b = 0; b < btns.length; b++) {
-    btns[b].addEventListener('click', handleUnlock);
-    btns[b].addEventListener('touchend', handleUnlock);
-  }
-}
 
-var currentPay = null;
-function handleUnlock(e) {
-  e.preventDefault();
-  e.stopPropagation();
-  var btn = e.currentTarget;
-  currentPay = btn.getAttribute('data-unlock');
-  $('pay-item').textContent = btn.getAttribute('data-title');
-  $('pay-price').textContent = '₩' + parseInt(btn.getAttribute('data-price')).toLocaleString();
-  $('pay-form').style.display = 'block';
-  $('pay-processing').classList.remove('show');
-  $('pay-overlay').classList.add('show');
-}
-function closePay() {
-  $('pay-overlay').classList.remove('show');
-  currentPay = null;
-}
-function processPay() {
-  $('pay-form').style.display = 'none';
-  $('pay-processing').classList.add('show');
-  var category = currentPay;  // 비동기 흐름에서 currentPay가 바뀌어도 안전하도록 캡처
-  setTimeout(function() {
-    var card = $('card-' + category);
-    if (card) {
-      card.classList.remove('locked');
-      card.classList.add('unlocked');
-    }
-    $('pay-overlay').classList.remove('show');
-    $('pay-form').style.display = 'block';
-    setTimeout(function() {
-      if (card) card.scrollIntoView({behavior:'smooth', block:'center'});
-    }, 200);
-    // v9: 잠금 해제 직후 Worker API 호출 (로딩/에러는 loadReadingIntoCard가 처리)
-    loadReadingIntoCard(category);
-  }, 1500);
+  // v10: 5개 카테고리를 병렬로 동시 호출
+  // Promise.all 안 쓰는 이유: 하나가 실패해도 나머지는 계속 표시되도록
+  for (var i = 0; i < PREMIUM.length; i++) {
+    loadReadingIntoCard(PREMIUM[i].id);
+  }
 }
 
 // ============================================================
@@ -10437,11 +10735,40 @@ function bindEvents() {
   $('g-female').addEventListener('click', function(){ setGender('female'); });
   $('in-unknown').addEventListener('change', toggleUnknown);
 
-  // 결제
-  $('pay-cancel').addEventListener('click', closePay);
-  var payBtns = $$('[data-pay]');
-  for (var p = 0; p < payBtns.length; p++) {
-    payBtns[p].addEventListener('click', processPay);
+  // v10: 채팅 카드 클릭 → 결제 시뮬레이션 후 채팅 활성화
+  var chatCard = $('chat-paywall-card');
+  if (chatCard) {
+    var cardHandler = function(e) {
+      e.preventDefault();
+      // 살짝 누르는 피드백
+      chatCard.classList.add('pressed');
+      setTimeout(function() {
+        chatCard.classList.remove('pressed');
+        unlockChat();
+      }, 400);
+    };
+    chatCard.addEventListener('click', cardHandler);
+    chatCard.addEventListener('touchend', cardHandler);
+  }
+
+  // v10: 채팅 전송 버튼
+  var sendBtn = $('chat-send');
+  if (sendBtn) {
+    sendBtn.addEventListener('click', function() {
+      var txt = $('chat-input').value;
+      sendChatMessage(txt);
+    });
+  }
+
+  // v10: 채팅 입력창 Enter 키 (Shift+Enter는 줄바꿈)
+  var chatInput = $('chat-input');
+  if (chatInput) {
+    chatInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendChatMessage(chatInput.value);
+      }
+    });
   }
 
   renderDots();
